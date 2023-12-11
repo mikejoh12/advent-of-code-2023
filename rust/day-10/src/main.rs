@@ -86,11 +86,10 @@ fn expand_path_by_2x(path: &Vec<Pos>) -> HashSet<Pos> {
 }
 
 fn get_area(path: &Vec<Pos>, max_x: i32, max_y: i32) -> i32 {
-    let larger_path: HashSet<Pos> = expand_path_by_2x(path);
-    let mut filled_map: HashSet<Pos> = larger_path.clone();
+    let mut larger_path: HashSet<Pos> = expand_path_by_2x(path);
     let mut queue: VecDeque<Pos> = VecDeque::new();
     queue.push_back(Pos { x: -1, y: -1 });
-    filled_map.insert(Pos { x: -1, y: -1 });
+    larger_path.insert(Pos { x: -1, y: -1 });
 
     while queue.len() > 0 {
         let pos = queue.pop_front().expect("Queue should have a pos");
@@ -112,8 +111,8 @@ fn get_area(path: &Vec<Pos>, max_x: i32, max_y: i32) -> i32 {
             {
                 continue;
             }
-            if !filled_map.contains(&new_pos) {
-                filled_map.insert(new_pos);
+            if !larger_path.contains(&new_pos) {
+                larger_path.insert(new_pos);
                 queue.push_back(new_pos);
             }
         }
@@ -122,7 +121,7 @@ fn get_area(path: &Vec<Pos>, max_x: i32, max_y: i32) -> i32 {
     let mut area = 0;
     for x in 0..(max_x * 2 + 1) {
         for y in 0..(max_y * 2 + 1) {
-            if x % 2 == 0 && y % 2 == 0 && !filled_map.contains(&Pos { x, y }) {
+            if x % 2 == 0 && y % 2 == 0 && !larger_path.contains(&Pos { x, y }) {
                 area += 1;
             }
         }
